@@ -13,9 +13,6 @@ var program = require("commander")
     .action(function(name) {
         componentName = name;
     })
-    .option("-p, --pure", "Create Pure Function Component")
-    .option("-c, --css", `Add ${componentName}.css`)
-    .option("-t, --test", `Add ${componentName}.test.js`)
     .parse(process.argv);
 
 createComponent(componentName);
@@ -28,50 +25,36 @@ function createComponent(name) {
     }
 
     var cssLine = "";
-    if (program.css) {
-        fs.writeFileSync(path.join(root, `${name}.css`));
-        cssLine = `import s from './${name}.css'\n\n`;
-    }
+    fs.writeFileSync(
+        path.join(root, `${name}.css`),
+        `.${name} {display:block}\n #${name} {display:block}`
+    );
+    cssLine = `import s from './${name}.css'`;
 
-    if (program.pure) {
-        fs.writeFileSync(
-            path.join(root, `${name}.js`),
-            `import React from 'react'\n` +
-            cssLine +
-            `const ${name} = (props) => {\n` +
-            `\treturn (\n` +
-            `\t\t<div>\n\t\t</div>\n` +
-            `\t)\n` +
-            `}\n\n` +
-            `export default ${name}`
-        );
-    } else {
-        fs.writeFileSync(
-            path.join(root, `${name}.js`),
-            `import React, { Component } from 'react'\n` +
-            cssLine +
-            `class ${name} extends Component {\n\n` +
-            `\tcomponentDidMount() {\n` +
-            `\t}\n\n` +
-            `\trender() {\n` +
-            `\t\treturn (\n` +
-            `\t\t)\n\n` +
-            `\t}\n\n` +
-            `}\n\n` +
-            `export default ${name}`
-        );
-    }
+    fs.writeFileSync(
+        path.join(root, `${name}.js`),
+        `import React from 'react';
+        import './${name}.css';\n
+        function ${name}() {
+        \treturn (
+        \t\t<div className="${name}" id="${name}">
+        \t\t\t ${name}
+        \t\t</div>
+        \t);
+        };\n
+        export default ${name};\n
+        `
+    );
     fs.writeFileSync(
         path.join(root, `${name}.test.js`),
-        `import React from 'react'\n` +
-        `import { render } from '@testing-library/react'\n` +
-        `import ${name} from './${name}'\n` +
-        `describe('<${name} />', () => {\n` +
-        `\ttest('renders', () => {\n` +
-        `\tconst wrapper = shallow( < ${name} / > );\n` +
-        `\texpect(wrapper).toMatchSnapshot();\n` +
-        `\t});\n` +
-        `});\n`
+        `import React from 'react';
+        import { render } from '@testing-library/react';\n
+        import ${name} from './${name}';\n
+        test('renders learn react link', () => {\n
+        \tconst { getByText } = render(<${name} />);\n
+        \tconst linkElement = getByText(/${name}/i);\n
+        \texpect(linkElement).toBeInTheDocument();\n
+        });\n`
     );
     console.log(`Component ${name} created`);
 }
