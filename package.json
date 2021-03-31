@@ -1,17 +1,30 @@
 {
-    "name": "grcf",
-    "version": "0.1.6",
-    "description": "Generate a react component with CLI",
-    "files": ["index.js"],
-    "repository": "https://github.com/okobsamoht/grc",
-    "author": "Thomas BOKO",
-    "license": "MIT",
-    "bin": {
-        "grcf": "./index.js"
-    },
-    "dependencies": {
-        "commander": "^7.2.0",
-        "fs-extra": "^9.1.0",
-        "program": "^1.0.0"
-    }
+  "name": "grcf",
+  "version": "0.1.6",
+  "description": "Generate a react component with CLI",
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okobsamoht/grcf.git"
+  },
+  "author": "Thomas BOKO",
+  "license": "MIT",
+  "bin": {
+    "grcf": "index.js"
+  },
+  "dependencies": {
+    "commander": "^7.2.0",
+    "fs-extra": "^9.1.0",
+    "program": "^1.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/okobsamoht/grcf/issues"
+  },
+  "homepage": "https://github.com/okobsamoht/grcf#readme",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
