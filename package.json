@@ -1,17 +1,17 @@
 {
-    "name": "grc",
+    "name": "grcf",
     "version": "0.1.6",
     "description": "Generate a react component with CLI",
-    "files": "index.js",
+    "files": ["index.js"],
     "repository": "https://github.com/okobsamoht/grc",
     "author": "Thomas BOKO",
     "license": "MIT",
     "bin": {
-        "grcmp": "./index.js"
+        "grcf": "./index.js"
     },
     "dependencies": {
-        "commander": "^2.9.0",
-        "fs-extra": "^2.0.0",
+        "commander": "^7.2.0",
+        "fs-extra": "^9.1.0",
         "program": "^1.0.0"
     }
 }
