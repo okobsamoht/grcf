@@ -1,6 +1,6 @@
 {
   "name": "grcf",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "Generate a react component with CLI",
   "files": [
     "index.js"
@@ -10,7 +10,7 @@
     "url": "git+https://github.com/okobsamoht/grcf.git"
   },
   "author": "Thomas BOKO",
-  "license": "MIT",
+  "license": "unlicenced",
   "bin": {
     "grcf": "index.js"
   },
