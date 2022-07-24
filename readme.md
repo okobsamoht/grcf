@@ -26,10 +26,11 @@ This will create a folder of your component name, and a **Component** js file wi
 options
 <br>
 <ul>
-<li>-js to create a js component [default]</li>
+<li>-jsx to create a jsx component [default]</li>
 <li>-tsx to create a typescript component</li>
-<li>-css to create a css style file for the component [default]</li>
 <li>-scss to create a scss style file for the component</li>
+<li>-file to create a single file component</li>
+<li>-notest to skip test file creation for the component</li>
 </ul>
 <br>
 That's it!
