@@ -8,27 +8,39 @@ const fs = require("fs-extra");
 let componentName;
 let componentType;
 let componentStyle;
+let componentMode;
+let componentTest;
 
 const program = require("commander")
     .version(require("./package.json").version)
     .arguments("<component-directory>")
     .option('-js', 'component javascript type')
+    .option('-jsx', 'component jsx type')
     .option('-tsx', 'component typescript type')
     .option('-css', 'component style css type')
     .option('-scss', 'component style scss type')
+    .option('-file', 'component single file mode')
+    .option('-folder', 'component folder mode')
+    .option('-notest', 'component no test file')
     .action(function (name, options) {
         componentName = name;
-        componentType = options.Js ? 'js' : options.Tsx ? 'tsx' : 'js';
+        componentType = options.Js ? 'js' : options.Jsx ? 'jsx' : options.Tsx ? 'tsx' : 'js';
         componentStyle = options.Css ? 'css' : options.Scss ? 'scss' : 'css';
+        componentMode = options.Folder ? 'folder' : options.File ? 'file' : 'folder';
+        componentTest = options.Notest ? 'notest' : 'test';
     })
     .parse(process.argv);
 
 console.log('GRCF ' + program.version())
 
-createComponent(componentName, componentType, componentStyle);
+function createComponentFolder(name, type, style, mode, test) {
+    let root;
 
-function createComponent(name, type, style) {
-    let root = path.resolve(name);
+    if (mode === 'folder'){
+        root = path.resolve(name);
+    } else if (mode === 'file'){
+        root = path.resolve('.');
+    }
 
     if (!fs.existsSync(root)) {
         fs.mkdirSync(root);
@@ -36,36 +48,25 @@ function createComponent(name, type, style) {
 
     fs.writeFileSync(
         path.join(root, `${name}.${style}`),
-        `.${name} {display:block}`
-    );
+        `.${name} {}`);
 
     fs.writeFileSync(
         path.join(root, `${name}.${type}`),
-        `import React from 'react';
-import './${name}.${style}';\n
-const ${name} = (props) => {
-\treturn (
-\t\t<div className="${name}">
-\t\t\t ${name}
-\t\t</div>
-\t);
-};\n
-export default ${name};`
-    );
-    fs.writeFileSync(
-        path.join(root, `index.${type}`),
-        `export {default} from './${name}';`
-    );
-    fs.writeFileSync(
-        path.join(root, `${name}.test.${type}`),
-        `import React from 'react';
-import { render, screen } from '@testing-library/react';
-import ${name} from './${name}';\n
-test('verify component', () => {
-\trender(<${name} />);
-\tconst linkElement = screen.getByText(/${name}/i);
-\texpect(linkElement).toBeInTheDocument();
-});\n`
-    );
-    console.log(`Component ${name} created with type ${type} and ${style} style file`);
+        `import React from 'react';\nimport './${name}.${style}';\nconst ${name} = (props) => {\n\treturn (\n\t\t<div className="${name}">\n\t\t\t ${name}\n\t\t</div>\n\t);\n};\nexport default ${name};`);
+
+    if (mode === 'folder'){
+        fs.writeFileSync(
+            path.join(root, `index.${type}`),
+            `export {default} from './${name}';`);
+    }
+
+    if (test==='test'){
+        fs.writeFileSync(
+            path.join(root, `${name}.test.${type}`),
+            `import React from 'react';\nimport { render, screen } from '@testing-library/react';\nimport ${name} from './${name}';\ntest('verify component', () => {\n\trender(<${name} />);\n\tconst linkElement = screen.getByText(/${name}/i);\n\texpect(linkElement).toBeInTheDocument();\n});\n`);
+    }
+    console.log(`Component ${name} created in ${mode} mode with type ${type} and ${style} style file`);
 }
+
+
+createComponentFolder(componentName, componentType, componentStyle, componentMode, componentTest);
