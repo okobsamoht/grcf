@@ -31,6 +31,7 @@ options
 <li>-scss to create a scss style file for the component</li>
 <li>-file to create a single file component</li>
 <li>-notest to skip test file creation for the component</li>
+<li>-nostyle to skip style file creation for the component</li>
 </ul>
 <br>
 That's it!
