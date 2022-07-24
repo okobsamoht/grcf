@@ -1,6 +1,6 @@
 {
   "name": "grcf",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Generate a react component with CLI",
   "files": [
     "index.js"
@@ -15,9 +15,8 @@
     "grcf": "index.js"
   },
   "dependencies": {
-    "commander": "^9.0.0",
-    "fs-extra": "^10.0.0",
-    "program": "^1.0.0"
+    "commander": "^9.4.0",
+    "fs-extra": "^10.1.0"
   },
   "bugs": {
     "url": "https://github.com/okobsamoht/grcf/issues"
