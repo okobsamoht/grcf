@@ -14,19 +14,17 @@ let componentTest;
 const program = require("commander")
     .version(require("./package.json").version)
     .arguments("<component-directory>")
-    .option('-js', 'component javascript type')
     .option('-jsx', 'component jsx type')
     .option('-tsx', 'component typescript type')
     .option('-css', 'component style css type')
     .option('-scss', 'component style scss type')
     .option('-file', 'component single file mode')
-    .option('-folder', 'component folder mode')
     .option('-notest', 'component no test file')
     .action(function (name, options) {
         componentName = name;
-        componentType = options.Js ? 'js' : options.Jsx ? 'jsx' : options.Tsx ? 'tsx' : 'js';
-        componentStyle = options.Css ? 'css' : options.Scss ? 'scss' : 'css';
-        componentMode = options.Folder ? 'folder' : options.File ? 'file' : 'folder';
+        componentType = options.Jsx ? 'jsx' : options.Tsx ? 'tsx' : 'js';
+        componentStyle = options.Scss ? 'scss' : 'css';
+        componentMode = options.File ? 'file' : 'folder';
         componentTest = options.Notest ? 'notest' : 'test';
     })
     .parse(process.argv);
@@ -65,7 +63,7 @@ function createComponentFolder(name, type, style, mode, test) {
             path.join(root, `${name}.test.${type}`),
             `import React from 'react';\nimport { render, screen } from '@testing-library/react';\nimport ${name} from './${name}';\ntest('verify component', () => {\n\trender(<${name} />);\n\tconst linkElement = screen.getByText(/${name}/i);\n\texpect(linkElement).toBeInTheDocument();\n});\n`);
     }
-    console.log(`Component ${name} created in ${mode} mode with type ${type} and ${style} style file`);
+    console.log(`Component ${name} created.`);
 }
 
 
