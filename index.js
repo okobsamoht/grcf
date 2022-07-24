@@ -19,11 +19,12 @@ const program = require("commander")
     .option('-css', 'component style css type')
     .option('-scss', 'component style scss type')
     .option('-file', 'component single file mode')
+    .option('-nostyle', 'component no style file')
     .option('-notest', 'component no test file')
     .action(function (name, options) {
         componentName = name;
         componentType = options.Jsx ? 'jsx' : options.Tsx ? 'tsx' : 'js';
-        componentStyle = options.Scss ? 'scss' : 'css';
+        componentStyle = options.Nostyle ? 'nostyle' : options.Scss ? 'scss' : 'css';
         componentMode = options.File ? 'file' : 'folder';
         componentTest = options.Notest ? 'notest' : 'test';
     })
@@ -44,13 +45,19 @@ function createComponentFolder(name, type, style, mode, test) {
         fs.mkdirSync(root);
     }
 
-    fs.writeFileSync(
-        path.join(root, `${name}.${style}`),
-        `.${name} {}`);
+    if (style !== 'nostyle'){
+        fs.writeFileSync(
+            path.join(root, `${name}.${style}`),
+            `.${name} {}`);
+    }
 
     fs.writeFileSync(
         path.join(root, `${name}.${type}`),
-        `import React from 'react';\nimport './${name}.${style}';\nconst ${name} = (props) => {\n\treturn (\n\t\t<div className="${name}">\n\t\t\t ${name}\n\t\t</div>\n\t);\n};\nexport default ${name};`);
+        `import React from "react";\n`
+            .concat(style !== 'nostyle' ? `import "./${name}.${style}";\n` :``)
+            .concat(`const ${name} = (props) => {\n\treturn (\n\t\t<div className=\{"${name}"\}>\n\t\t\t ${name}\n\t\t</div>\n\t);\n};\n`)
+            .concat(`export default ${name};`)
+    );
 
     if (mode === 'folder'){
         fs.writeFileSync(
@@ -61,7 +68,11 @@ function createComponentFolder(name, type, style, mode, test) {
     if (test==='test'){
         fs.writeFileSync(
             path.join(root, `${name}.test.${type}`),
-            `import React from 'react';\nimport { render, screen } from '@testing-library/react';\nimport ${name} from './${name}';\ntest('verify component', () => {\n\trender(<${name} />);\n\tconst linkElement = screen.getByText(/${name}/i);\n\texpect(linkElement).toBeInTheDocument();\n});\n`);
+            `import React from 'react';\n`
+                .concat(`import { render, screen } from '@testing-library/react';\n`)
+                .concat(`import ${name} from './${name}';\n`)
+                .concat(`test('verify component', () => {\n\trender(<${name} />);\n\tconst linkElement = screen.getByText(/${name}/i);\n\texpect(linkElement).toBeInTheDocument();\n});\n`)
+        );
     }
     console.log(`Component ${name} created.`);
 }
