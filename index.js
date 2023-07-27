@@ -55,7 +55,7 @@ function createComponentFolder(name, type, style, mode, test) {
         path.join(root, `${name}.${type}`),
         `import React from "react";\n`
             .concat(style !== 'nostyle' ? `import "./${name}.${style}";\n` :``)
-            .concat(`const ${name} = (props) => {\n\treturn (\n\t\t<div className=\{"${name}"\}>\n\t\t\t ${name}\n\t\t</div>\n\t);\n};\n`)
+            .concat(`const ${name} = (props${type==='tsx' ? ':any':''}) => {\n\treturn (\n\t\t<div className=\{"${name}"\}>\n\t\t\t ${name}\n\t\t</div>\n\t);\n};\n`)
             .concat(`export default ${name};`)
     );
 
