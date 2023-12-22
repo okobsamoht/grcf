@@ -72,9 +72,9 @@ function createComponentFolder(name, type, style, mode, test, native) {
     if (native === "native"){
         fs.writeFileSync(
             path.join(root, `${name}.${type}`),
-            `import {View} from "react-native";\n`
+            `import {View, Text} from "react-native";\n`
                 .concat((style !== 'nostyle' && native === 'native') ? `import ${name}Style from "./${name}.style.${type}";\n` :``)
-                .concat(`const ${name} = (props) => {\n\treturn (\n\t\t<View style=\{${name}Style\}>\n\t\t\t ${name}\n\t\t</View>\n\t);\n};\n`)
+                .concat(`const ${name} = (props) => {\n\treturn (\n\t\t<View style=\{${name}Style\}>\n\t\t\t<Text>${name}</Text>\n\t\t</View>\n\t);\n};\n`)
                 .concat(`export default ${name};`)
         );
     }
