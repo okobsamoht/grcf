@@ -37,6 +37,8 @@ console.log('GRCF ' + program.version())
 
 function createComponentFolder(name, type, style, mode, test, native) {
     let root;
+    const indexExt = type === 'jsx' ? 'js' : type === 'tsx' ? 'ts' : 'js'
+    const compExt = type === 'jsx' ? 'jsx' : type === 'tsx' ? 'tsx' : 'js'
 
     if (mode === 'folder'){
         root = path.resolve(name);
@@ -56,13 +58,13 @@ function createComponentFolder(name, type, style, mode, test, native) {
 
     if (style !== 'nostyle' && native === 'native'){
         fs.writeFileSync(
-            path.join(root, `${name}.style.${type}`),
+            path.join(root, `${name}.style.${indexExt}`),
             `import { StyleSheet } from 'react-native';\nconst ${name}Style = StyleSheet.create({\n\tview:{\n\t\tflex:1\n\t}\n});\nexport default ${name}Style;`);
     }
 
     if (native === "web"){
         fs.writeFileSync(
-            path.join(root, `${name}.${type}`),
+            path.join(root, `${name}.${compExt}`),
             `import React from "react";\n`
                 .concat(style !== 'nostyle' ? `import "./${name}.${style}";\n` :``)
                 .concat(`const ${name} = (props${type==='tsx' ? ':any':''}) => {\n\treturn (\n\t\t<div className=\{"${name}"\}>\n\t\t\t ${name}\n\t\t</div>\n\t);\n};\n`)
@@ -71,23 +73,23 @@ function createComponentFolder(name, type, style, mode, test, native) {
     }
     if (native === "native"){
         fs.writeFileSync(
-            path.join(root, `${name}.${type}`),
+            path.join(root, `${name}.${compExt}`),
             `import {View, Text} from "react-native";\n`
                 .concat((style !== 'nostyle' && native === 'native') ? `import ${name}Style from "./${name}.style.${type}";\n` :``)
-                .concat(`const ${name} = (props) => {\n\treturn (\n\t\t<View style=\{${name}Style.view\}>\n\t\t\t<Text>${name}</Text>\n\t\t</View>\n\t);\n};\n`)
+                .concat(`const ${name} = (props${type==='tsx' ? ':any':''}) => {\n\treturn (\n\t\t<View style=\{${name}Style.view\}>\n\t\t\t<Text>${name}</Text>\n\t\t</View>\n\t);\n};\n`)
                 .concat(`export default ${name};`)
         );
     }
 
     if (mode === 'folder'){
         fs.writeFileSync(
-            path.join(root, `index.${type}`),
+            path.join(root, `index.${indexExt}`),
             `export {default} from './${name}';`);
     }
 
     if (test==='test'){
         fs.writeFileSync(
-            path.join(root, `${name}.test.${type}`),
+            path.join(root, `${name}.test.${indexExt}`),
             `import React from 'react';\n`
                 .concat(`import { render, screen } from '@testing-library/react';\n`)
                 .concat(`import ${name} from './${name}';\n`)
